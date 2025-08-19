@@ -52,7 +52,7 @@ class EleveController extends Controller
      */
     public function show(Eleve $eleve)
     {
-        //
+        // 
     }
 
     /**
@@ -60,7 +60,7 @@ class EleveController extends Controller
      */
     public function edit(Eleve $eleve)
     {
-        //
+        return view('eleves.edit', compact('eleve'));
     }
 
     /**
@@ -68,7 +68,21 @@ class EleveController extends Controller
      */
     public function update(UpdateEleveRequest $request, Eleve $eleve)
     {
-        //
+        $request->validate([
+            'nom' => 'required|string|max:30',
+            'prenom' => 'required|string|max:30',
+            'age' => 'required|integer|min:1',
+            'etat' => 'nullable|boolean',
+        ]);
+        $eleve->update([
+            'nom' => $request->nom,
+            'prenom' => $request->prenom,
+            'age' => $request->age,
+            'etat' => $request->has('etat') ? 1 : 0,
+        ]);
+
+        return redirect()->route('eleves.index');
+
     }
 
     /**
@@ -76,6 +90,7 @@ class EleveController extends Controller
      */
     public function destroy(Eleve $eleve)
     {
-        //
+        $eleve->delete();
+        return redirect()->route('eleves.index');
     }
 }
